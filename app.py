@@ -18,10 +18,10 @@ import os
 import sys
 import json
 from python_simsimi import SimSimi
-from python_simsimi.language_codes import LC_TIENG_VIET
+from python_simsimi.language_codes import LC_ENGLISH
 from python_simsimi.simsimi import SimSimiException
 simSimi = SimSimi(
-        conversation_language=LC_TIENG_VIET,
+        conversation_language=LC_ENGLISH,
         conversation_key='16df5864-cfe2-4ae0-bec3-1881cc6149fb',
         conversation_request_url = 'http://sandbox.api.simsimi.com/request.p'
 )
@@ -66,9 +66,10 @@ def webhook():
                     try:
                         response = simSimi.getConversation(messaging_event["message"]["text"])
                         print response['response']
+                        send_message(sender_id, response['response'])
                     except SimSimiException as e:
                         send_message(sender_id, "loi me no roi")
-                    send_message(sender_id, response['response'])
+                    
                 if messaging_event.get("delivery"):  # delivery confirmation
                     pass
 
