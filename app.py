@@ -1,6 +1,30 @@
+#-------------------------------------------------------------------------------
+# Name:        module1
+# Purpose:
+#
+# Author:      Bot-Father
+#
+# Created:     04/01/2017
+# Copyright:   (c) Bot-Father 2017
+# Licence:     <your licence>
+#-------------------------------------------------------------------------------
+
+def main():
+    pass
+
+if __name__ == '__main__':
+    main()
 import os
 import sys
 import json
+from python_simsimi import SimSimi
+from python_simsimi.language_codes import LC_TIENG_VIET
+from python_simsimi.simsimi import SimSimiException
+simSimi = SimSimi(
+        conversation_language=LC_TIENG_VIET,
+        conversation_key='16df5864-cfe2-4ae0-bec3-1881cc6149fb',
+        conversation_request_url = 'http://sandbox.api.simsimi.com/request.p'
+)
 
 import requests
 from flask import Flask, request
@@ -38,8 +62,12 @@ def webhook():
                     sender_id = messaging_event["sender"]["id"]        # the facebook ID of the person sending you the message
                     recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
                     message_text = messaging_event["message"]["text"]  # the message's text
-
-                    send_message(sender_id, "got it, thanks!")
+                    try:
+                        response = simSimi.getConversation(message_text)
+                        print response['response']
+                    except SimSimiException as e:
+                        send_message(sender_id, "loi me no roi")
+                    send_message(sender_id, response['response'])
 
                 if messaging_event.get("delivery"):  # delivery confirmation
                     pass
